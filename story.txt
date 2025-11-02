@@ -1,0 +1,6 @@
+Chapter 1
+---------
+
+Once upon a time,
+in a land far far away,
+there lived a Rust developer
