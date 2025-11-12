@@ -203,8 +203,13 @@ fn main() {
 
   let microwave_count = orders
       .iter()
-      .filter(|order| order.product == Product::Microwave)
-      .map(|order| order.quantity)
+      .filter_map(|order| {
+          if order.product == Product::Microwave {
+              Some(order.quantity)
+          } else {
+              None
+          }
+      })
       .sum::<u32>();
   println!("{microwave_count}");
 }
