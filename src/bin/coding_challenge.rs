@@ -195,4 +195,9 @@ fn main() {
   ];
 
   let customer_ids_by_order = [2, 1, 2, 3, 4, 1];
+
+  let blender_orders = orders.iter()
+      .filter(|order| order.product == Product::Blender)
+      .collect::<Vec<&CustomerOrder>>();
+    println!("{blender_orders:#?}");
 }
