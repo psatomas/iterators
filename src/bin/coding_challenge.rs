@@ -199,5 +199,12 @@ fn main() {
   let blender_orders = orders.iter()
       .filter(|order| order.product == Product::Blender)
       .collect::<Vec<&CustomerOrder>>();
-    println!("{blender_orders:#?}");
+  println!("{blender_orders:#?}");
+
+  let microwave_count = orders
+      .iter()
+      .filter(|order| order.product == Product::Microwave)
+      .map(|order| order.quantity)
+      .sum::<u32>();
+  println!("{microwave_count}");
 }
