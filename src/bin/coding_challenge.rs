@@ -153,6 +153,7 @@ Customer {
 */
 
 #![allow(unused, dead_code)]
+use std::collections::HashMap;
 use std::env;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -228,4 +229,17 @@ fn main() {
         .filter(|order| order.quantity >= user_quantity)
         .collect::<Vec<&CustomerOrder>>();
     print!("{orders_by_quantity:#?}");
+
+    let product_quantities = orders
+        .iter()
+        .filter(|order| order.shipped == false)
+        .fold(HashMap::new(),
+         |mut data, order| {
+            let entry = data.entry(&order.product).or_insert(0);
+            *entry += order.quantity;
+            data
+        },
+    );
+    println!("{product_quantities:?}");
 }
+            
