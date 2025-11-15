@@ -153,6 +153,8 @@ Customer {
 */
 
 #![allow(unused, dead_code)]
+use std::env;
+
 #[derive(Debug, PartialEq, Eq, Hash)]
 enum Product {
     Blender,
@@ -185,31 +187,45 @@ struct Customer {
 }
 
 fn main() {
-  let mut orders = vec![
-      CustomerOrder::new(Product::Blender, 3, false),
-      CustomerOrder::new(Product::Microwave, 1, true),
-      CustomerOrder::new(Product::Toaster, 2, false),
-      CustomerOrder::new(Product::Microwave, 5, true),
-      CustomerOrder::new(Product::Blender, 1, false),
-      CustomerOrder::new(Product::Fridge, 10, false),
-  ];
+    let mut orders = vec![
+        CustomerOrder::new(Product::Blender, 3, false),
+        CustomerOrder::new(Product::Microwave, 1, true),
+        CustomerOrder::new(Product::Toaster, 2, false),
+        CustomerOrder::new(Product::Microwave, 5, true),
+        CustomerOrder::new(Product::Blender, 1, false),
+        CustomerOrder::new(Product::Fridge, 10, false),
+    ];
 
-  let customer_ids_by_order = [2, 1, 2, 3, 4, 1];
+    let customer_ids_by_order = [2, 1, 2, 3, 4, 1];
 
-  let blender_orders = orders.iter()
-      .filter(|order| order.product == Product::Blender)
-      .collect::<Vec<&CustomerOrder>>();
-  println!("{blender_orders:#?}");
+    let blender_orders = orders
+        .iter()
+        .filter(|order| order.product == Product::Blender)
+        .collect::<Vec<&CustomerOrder>>();
+    println!("{blender_orders:#?}");
 
-  let microwave_count = orders
-      .iter()
-      .filter_map(|order| {
-          if order.product == Product::Microwave {
-              Some(order.quantity)
-          } else {
-              None
-          }
-      })
-      .sum::<u32>();
-  println!("{microwave_count}");
+    let microwave_count = orders
+        .iter()
+        .filter_map(|order| {
+            if order.product == Product::Microwave {
+                Some(order.quantity)
+            } else {
+                None
+            }
+        })
+        .sum::<u32>();
+    println!("{microwave_count}");
+
+    let user_quantity = env::args()
+        .skip(1)
+        .take(1)
+        .map(|quantity| quantity.parse::<u32>().unwrap_or(2))
+        .next()
+        .unwrap_or(2);
+
+    let orders_by_quantity = orders
+        .iter()
+        .filter(|order| order.quantity >= user_quantity)
+        .collect::<Vec<&CustomerOrder>>();
+    print!("{orders_by_quantity:#?}");
 }
