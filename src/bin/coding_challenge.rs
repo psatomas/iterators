@@ -241,5 +241,11 @@ fn main() {
         },
     );
     println!("{product_quantities:?}");
+
+    if let Some(order) = orders.iter_mut().find(|order| order.shipped == false ){
+        order.shipped = true; 
+    }
+
+    println!("{orders:?}");
 }
             
