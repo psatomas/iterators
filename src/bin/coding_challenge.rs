@@ -230,11 +230,9 @@ fn main() {
         .collect::<Vec<&CustomerOrder>>();
     print!("{orders_by_quantity:#?}");
 
-    let product_quantities = orders
-        .iter()
-        .filter(|order| order.shipped == false)
-        .fold(HashMap::new(),
-         |mut data, order| {
+    let product_quantities = orders.iter().filter(|order| order.shipped == false).fold(
+        HashMap::new(),
+        |mut data, order| {
             let entry = data.entry(&order.product).or_insert(0);
             *entry += order.quantity;
             data
@@ -242,10 +240,25 @@ fn main() {
     );
     println!("{product_quantities:?}");
 
-    if let Some(order) = orders.iter_mut().find(|order| order.shipped == false ){
-        order.shipped = true; 
+    if let Some(order) = orders.iter_mut().find(|order| order.shipped == false) {
+        order.shipped = true;
     }
 
     println!("{orders:?}");
+
+    let mut customers = orders
+        .into_iter()
+        .zip(customer_ids_by_order)
+        .fold(HashMap::new(), |mut ids_to_orders, (order, customer_id)| {
+            let mut orders = ids_to_orders.entry(customer_id).or_insert(vec![]);
+            orders.push(order);
+            ids_to_orders
+        })
+        .into_iter()
+        .map(|(id, orders)| Customer { id, orders })
+        .collect::<Vec<Customer>>();
+
+    customers.sort_by_key(|customer| customer.id);
+
+    println!("{customers:?}")           
 }
-            
